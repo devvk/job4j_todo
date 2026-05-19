@@ -56,13 +56,18 @@ public class TaskRepository {
         }
     }
 
-    public Task update(Task task) {
+    public Optional<Task> update(Task task) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                session.merge(task);
+                Task foundTask = session.get(Task.class, task.getId());
+                if (foundTask == null) {
+                    return Optional.empty();
+                }
+                foundTask.setTitle(task.getTitle());
+                foundTask.setDescription(task.getDescription());
                 transaction.commit();
-                return task;
+                return Optional.of(foundTask);
             } catch (HibernateException e) {
                 transaction.rollback();
                 throw e;

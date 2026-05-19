@@ -36,7 +36,7 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public Task update(Task task) {
+    public Optional<Task> update(Task task) {
         return taskRepository.update(task);
     }
 

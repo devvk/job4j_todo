@@ -1,7 +1,6 @@
 package ru.job4j.todo.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,6 @@ import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
-@Slf4j
 @RequestMapping("/tasks")
 public class TaskController {
 
@@ -54,16 +52,9 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String createTask(@ModelAttribute Task task, Model model) {
-        try {
-            Task savedTask = taskService.save(task);
-            return "redirect:/tasks/" + savedTask.getId();
-        } catch (Exception e) {
-            model.addAttribute("error", "Не удалось создать задачу.");
-            model.addAttribute("task", task);
-            log.error("Failed to create task. Task data: {}", task, e);
-            return "tasks/create";
-        }
+    public String createTask(@ModelAttribute Task task) {
+        Task savedTask = taskService.save(task);
+        return "redirect:/tasks/" + savedTask.getId();
     }
 
     @GetMapping("/edit/{id}")
@@ -79,47 +70,32 @@ public class TaskController {
 
     @PostMapping("/edit/{id}")
     public String editTask(@PathVariable int id, @ModelAttribute Task task, Model model) {
-        try {
-            task.setId(id);
-            Task editedTask = taskService.update(task);
-            return "redirect:/tasks/" + editedTask.getId();
-        } catch (Exception e) {
-            model.addAttribute("error", "Не удалось обновить задачу.");
-            model.addAttribute("task", task);
-            log.error("Failed to edit task. Task data: {}", task, e);
-            return "tasks/edit";
+        task.setId(id);
+        Optional<Task> editedTaskOptional = taskService.update(task);
+        if (editedTaskOptional.isEmpty()) {
+            model.addAttribute("error", "Задача не найдена.");
+            return "error/404";
         }
+        return "redirect:/tasks/" + editedTaskOptional.get().getId();
     }
 
     @PostMapping("/delete/{id}")
     public String deleteTask(@PathVariable int id, Model model) {
-        try {
-            boolean isDeleted = taskService.delete(id);
-            if (!isDeleted) {
-                model.addAttribute("error", "Задача не найдена.");
-                return "error/404";
-            }
-            return "redirect:/tasks";
-        } catch (Exception e) {
-            model.addAttribute("error", "Не удалось удалить задачу.");
-            log.error("Failed to delete task. Task data: {}", id, e);
-            return "error/500";
+        boolean isDeleted = taskService.delete(id);
+        if (!isDeleted) {
+            model.addAttribute("error", "Задача не найдена.");
+            return "error/404";
         }
+        return "redirect:/tasks";
     }
 
     @PostMapping("/markdone/{id}")
     public String markDoneTask(@PathVariable int id, Model model) {
-        try {
-            boolean isDone = taskService.markDone(id);
-            if (!isDone) {
-                model.addAttribute("error", "Задача не найдена.");
-                return "error/404";
-            }
-            return "redirect:/tasks/" + id;
-        } catch (Exception e) {
-            model.addAttribute("error", "Не удалось обновить задачу.");
-            log.error("Failed to mark task done. Task data: {}", id, e);
-            return "error/500";
+        boolean isDone = taskService.markDone(id);
+        if (!isDone) {
+            model.addAttribute("error", "Задача не найдена.");
+            return "error/404";
         }
+        return "redirect:/tasks/" + id;
     }
 }

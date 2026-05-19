@@ -4,7 +4,20 @@
 
 ## Стек технологий
 
-Java 21, Spring Boot, Thymeleaf, Bootstrap, Hibernate, PostgreSQL, Liquibase, Maven.
+- Java 21
+- Spring Boot 3.5.14
+- Thymeleaf 3.1.5
+- Bootstrap 5
+- Hibernate 6.6.49
+- PostgreSQL 42.7.11
+- Liquibase 4.15.0
+- Maven 3
+
+## Требования к окружению
+
+- JDK 21
+- PostgreSQL 18+
+- Maven 3.9+
 
 ## Возможности приложения
 
