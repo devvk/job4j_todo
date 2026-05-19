@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header :: header}"></head>
+
+<body>
+
+<div th:replace="~{fragments/navigation :: navigation}"></div>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>TODO list</h1>
+        <a class="btn btn-primary" href="/tasks/create">Добавить задание</a>
+    </div>
+
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+        <tr>
+            <th>Описание</th>
+            <th>Дата создания</th>
+            <th>Состояние</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}">
+            <td>
+                <a th:href="@{/tasks/{id}(id=${task.id})}" th:text="${task.title}"></a>
+            </td>
+            <td th:text="${#temporals.format(task.created, 'dd.MM.yyyy HH:mm')}"></td>
+            <td>
+                <span th:if="${task.done}" class="badge text-bg-success">Выполнена</span>
+                <span th:unless="${task.done}" class="badge text-bg-warning">Новая</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

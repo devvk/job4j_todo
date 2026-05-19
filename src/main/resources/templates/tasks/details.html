@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header :: header}"></head>
+
+<body>
+
+<div th:replace="~{fragments/navigation :: navigation}"></div>
+
+<div class="container mt-4">
+    <h1 th:text="${task.title}">Название задачи</h1>
+
+    <p class="text-muted" th:text="${#temporals.format(task.created, 'dd.MM.yyyy HH:mm')}"></p>
+
+    <p class="lead" th:text="${task.description}"></p>
+
+    <p>
+        <span th:if="${task.done}" class="badge text-bg-success">Выполнено</span>
+        <span th:unless="${task.done}" class="badge text-bg-warning">Активное</span>
+    </p>
+
+    <div class="d-flex gap-2">
+
+        <a href="/tasks" class="btn btn-secondary">Назад</a>
+
+        <form th:action="@{/tasks/delete/{id}(id=${task.id})}" method="post">
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </form>
+
+        <a th:href="@{/tasks/edit/{id}(id=${task.id})}" class="btn btn-primary">Редактировать</a>
+
+        <form th:if="${!task.done}" th:action="@{/tasks/markdone/{id}(id=${task.id})}" method="post">
+            <button type="submit" class="btn btn-success">Выполнено</button>
+        </form>
+
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>
