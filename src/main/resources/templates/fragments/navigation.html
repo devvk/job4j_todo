@@ -3,10 +3,23 @@
         <div class="container">
             <a class="navbar-brand" href="/">TODO list</a>
 
-            <div class="navbar-nav">
+            <div class="navbar-nav" th:if="${session.user != null}">
                 <a class="nav-link" href="/tasks">Все</a>
                 <a class="nav-link" href="/tasks/done">Выполненные</a>
-                <a class="nav-link" href="/tasks/active">Новые</a>
+                <a class="nav-link" href="/tasks/active">Активные</a>
+            </div>
+
+            <div class="navbar-nav ms-auto" th:if="${session.user == null}">
+                <a class="nav-link" href="/users/login">Войти</a>
+                <a class="nav-link" href="/users/register">Регистрация</a>
+            </div>
+
+            <div class="navbar-nav ms-auto" th:if="${session.user != null}">
+                <form th:action="@{/users/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-link nav-link px-0">
+                        Выйти
+                    </button>
+                </form>
             </div>
         </div>
     </nav>
