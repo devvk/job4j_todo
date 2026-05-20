@@ -19,6 +19,7 @@
             <th>Описание</th>
             <th>Дата создания</th>
             <th>Состояние</th>
+            <th>Автор</th>
         </tr>
         </thead>
         <tbody>
@@ -31,6 +32,7 @@
                 <span th:if="${task.done}" class="badge text-bg-success">Выполнена</span>
                 <span th:unless="${task.done}" class="badge text-bg-warning">Новая</span>
             </td>
+            <td th:text="${task.user != null ? task.user.login : '-'}"></td>
         </tr>
         </tbody>
     </table>

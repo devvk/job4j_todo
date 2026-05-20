@@ -1,10 +1,12 @@
 package ru.job4j.todo.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
 
 import java.util.Optional;
@@ -52,8 +54,9 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String createTask(@ModelAttribute Task task) {
-        Task savedTask = taskService.save(task);
+    public String createTask(@ModelAttribute Task task, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        Task savedTask = taskService.save(task, user);
         return "redirect:/tasks/" + savedTask.getId();
     }
 
