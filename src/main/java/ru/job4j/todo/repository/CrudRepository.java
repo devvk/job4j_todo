@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.CommonQueryContract;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -41,12 +42,16 @@ public class CrudRepository {
         });
     }
 
+    private void setParameters(CommonQueryContract query, Map<String, Object> args) {
+        for (Map.Entry<String, Object> entry : args.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+    }
+
     public void run(String query, Map<String, Object> args) {
         Consumer<Session> command = session -> {
             var sessionQuery = session.createMutationQuery(query);
-            for (Map.Entry<String, Object> entry : args.entrySet()) {
-                sessionQuery.setParameter(entry.getKey(), entry.getValue());
-            }
+            setParameters(sessionQuery, args);
             sessionQuery.executeUpdate();
         };
         run(command);
@@ -61,9 +66,7 @@ public class CrudRepository {
     public <T> List<T> query(String query, Class<T> clazz, Map<String, Object> args) {
         Function<Session, List<T>> command = session -> {
             var sessionQuery = session.createQuery(query, clazz);
-            for (Map.Entry<String, Object> entry : args.entrySet()) {
-                sessionQuery.setParameter(entry.getKey(), entry.getValue());
-            }
+            setParameters(sessionQuery, args);
             return sessionQuery.list();
         };
         return transaction(command);
@@ -72,9 +75,7 @@ public class CrudRepository {
     public int affectedRowsQuery(String query, Map<String, Object> args) {
         Function<Session, Integer> command = session -> {
             var sessionQuery = session.createMutationQuery(query);
-            for (Map.Entry<String, Object> entry : args.entrySet()) {
-                sessionQuery.setParameter(entry.getKey(), entry.getValue());
-            }
+            setParameters(sessionQuery, args);
             return sessionQuery.executeUpdate();
         };
         return transaction(command);
@@ -83,9 +84,7 @@ public class CrudRepository {
     public <T> Optional<T> optional(String query, Class<T> clazz, Map<String, Object> args) {
         Function<Session, Optional<T>> command = session -> {
             var sessionQuery = session.createQuery(query, clazz);
-            for (Map.Entry<String, Object> entry : args.entrySet()) {
-                sessionQuery.setParameter(entry.getKey(), entry.getValue());
-            }
+            setParameters(sessionQuery, args);
             return sessionQuery.uniqueResultOptional();
         };
         return transaction(command);
