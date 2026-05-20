@@ -71,12 +71,12 @@ public class TaskController {
     @PostMapping("/edit/{id}")
     public String editTask(@PathVariable int id, @ModelAttribute Task task, Model model) {
         task.setId(id);
-        Optional<Task> editedTaskOptional = taskService.update(task);
-        if (editedTaskOptional.isEmpty()) {
+        boolean isUpdated = taskService.update(task);
+        if (!isUpdated) {
             model.addAttribute("error", "Задача не найдена.");
             return "error/404";
         }
-        return "redirect:/tasks/" + editedTaskOptional.get().getId();
+        return "redirect:/tasks/" + id;
     }
 
     @PostMapping("/delete/{id}")

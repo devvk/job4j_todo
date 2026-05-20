@@ -36,7 +36,7 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public Optional<Task> update(Task task) {
+    public boolean update(Task task) {
         return taskRepository.update(task);
     }
 

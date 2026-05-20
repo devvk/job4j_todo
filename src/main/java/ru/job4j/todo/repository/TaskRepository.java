@@ -56,18 +56,22 @@ public class TaskRepository {
         }
     }
 
-    public Optional<Task> update(Task task) {
+    public boolean update(Task task) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                Task foundTask = session.get(Task.class, task.getId());
-                if (foundTask == null) {
-                    return Optional.empty();
-                }
-                foundTask.setTitle(task.getTitle());
-                foundTask.setDescription(task.getDescription());
+                int affectedRows = session.createMutationQuery(
+                                """
+                                         update Task
+                                         set title = :title, description = :description
+                                         where id = :id
+                                        """)
+                        .setParameter("title", task.getTitle())
+                        .setParameter("description", task.getDescription())
+                        .setParameter("id", task.getId())
+                        .executeUpdate();
                 transaction.commit();
-                return Optional.of(foundTask);
+                return affectedRows > 0;
             } catch (HibernateException e) {
                 transaction.rollback();
                 throw e;
