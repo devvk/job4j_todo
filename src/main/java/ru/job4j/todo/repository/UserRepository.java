@@ -47,7 +47,7 @@ public class UserRepository {
 
     public Optional<User> findByLoginAndPassword(String login, String password) {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from User where login = :login and password = :password",
+            return session.createQuery("FROM User WHERE login = :login AND password = :password",
                             User.class)
                     .setParameter("login", login)
                     .setParameter("password", password)

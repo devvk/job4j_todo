@@ -19,19 +19,19 @@ public class TaskRepository {
 
     public List<Task> findAll() {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Task", Task.class).list();
+            return session.createQuery("FROM Task", Task.class).list();
         }
     }
 
     public List<Task> findAllDone() {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Task where done is true", Task.class).list();
+            return session.createQuery("FROM Task WHERE done IS TRUE", Task.class).list();
         }
     }
 
     public List<Task> findAllActive() {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Task where done is false", Task.class).list();
+            return session.createQuery("FROM Task WHERE done IS FALSE", Task.class).list();
         }
     }
 
@@ -62,9 +62,9 @@ public class TaskRepository {
             try {
                 int affectedRows = session.createMutationQuery(
                                 """
-                                         update Task
-                                         set title = :title, description = :description
-                                         where id = :id
+                                         UPDATE Task
+                                         SET title = :title, description = :description
+                                         WHERE id = :id
                                         """)
                         .setParameter("title", task.getTitle())
                         .setParameter("description", task.getDescription())
@@ -83,7 +83,7 @@ public class TaskRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                int affectedRows = session.createMutationQuery("delete from Task where id = :id")
+                int affectedRows = session.createMutationQuery("DELETE FROM Task WHERE id = :id")
                         .setParameter("id", id)
                         .executeUpdate();
                 transaction.commit();
@@ -99,7 +99,12 @@ public class TaskRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                int affectedRows = session.createMutationQuery("update Task set done = true where id = :id")
+                int affectedRows = session.createMutationQuery(
+                                """
+                                        UPDATE Task
+                                        SET done = TRUE
+                                        WHERE id = :id
+                                        """)
                         .setParameter("id", id)
                         .executeUpdate();
                 transaction.commit();
