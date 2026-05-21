@@ -13,10 +13,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     private String title;

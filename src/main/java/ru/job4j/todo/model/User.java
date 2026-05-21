@@ -11,10 +11,12 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     String name;

@@ -8,9 +8,15 @@
         <property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/todo</property>
         <property name="hibernate.connection.username">devvk</property>
         <property name="hibernate.connection.password"/>
-        <property name="hibernate.connection.pool_size">1</property>
-        <property name="hibernate.current_session_context_class">thread</property>
+
+        <property name="hibernate.connection.pool_size">10</property>
+        <property name="hibernate.current_session_context_class">
+            org.hibernate.context.internal.ThreadLocalSessionContext
+        </property>
+
         <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.highlight_sql">true</property>
 
         <mapping class="ru.job4j.todo.model.Task"/>
         <mapping class="ru.job4j.todo.model.User"/>
