@@ -19,6 +19,7 @@
             <th>Описание</th>
             <th>Дата создания</th>
             <th>Состояние</th>
+            <th>Приоритет</th>
             <th>Автор</th>
         </tr>
         </thead>
@@ -31,6 +32,12 @@
             <td>
                 <span th:if="${task.done}" class="badge text-bg-success">Выполнена</span>
                 <span th:unless="${task.done}" class="badge text-bg-warning">Новая</span>
+            </td>
+            <td>
+                <span th:if="${task.priority != null}"
+                      class="badge text-bg-info"
+                      th:text="${task.priority.name}">Приоритет</span>
+                <span th:if="${task.priority == null}" class="badge text-bg-secondary">-</span>
             </td>
             <td th:text="${task.user != null ? task.user.login : '-'}"></td>
         </tr>

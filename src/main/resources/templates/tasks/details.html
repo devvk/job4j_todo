@@ -14,10 +14,14 @@
 
     <p class="lead" th:text="${task.description}"></p>
 
-    <p>
+    <p class="d-flex gap-2 align-items-center">
         <span th:if="${task.done}" class="badge text-bg-success">Выполнено</span>
         <span th:unless="${task.done}" class="badge text-bg-warning">Активное</span>
+        <span th:if="${task.priority != null}"
+              class="badge text-bg-info"
+              th:text="${task.priority.name}">Приоритет</span>
     </p>
+
 
     <div class="d-flex gap-2">
 

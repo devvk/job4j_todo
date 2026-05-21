@@ -15,19 +15,41 @@ public class TaskRepository {
     private final CrudRepository crudRepository;
 
     public List<Task> findAll() {
-        return crudRepository.query("FROM Task ORDER BY created DESC", Task.class);
+        return crudRepository.query("""
+                SELECT t FROM Task t
+                LEFT JOIN FETCH t.priority
+                LEFT JOIN FETCH t.user
+                ORDER BY t.created DESC
+                """, Task.class);
     }
 
     public List<Task> findAllDone() {
-        return crudRepository.query("FROM Task WHERE done IS TRUE ORDER BY created DESC", Task.class);
+        return crudRepository.query("""
+                SELECT t FROM Task t
+                LEFT JOIN FETCH t.priority
+                LEFT JOIN FETCH t.user
+                WHERE t.done IS TRUE
+                ORDER BY t.created DESC
+                """, Task.class);
     }
 
     public List<Task> findAllActive() {
-        return crudRepository.query("FROM Task WHERE done IS FALSE ORDER BY created DESC", Task.class);
+        return crudRepository.query("""
+                SELECT t FROM Task t
+                LEFT JOIN FETCH t.priority
+                LEFT JOIN FETCH t.user
+                WHERE t.done IS FALSE
+                ORDER BY t.created DESC
+                """, Task.class);
     }
 
     public Optional<Task> findById(int id) {
-        return crudRepository.optional("FROM Task WHERE id = :id", Task.class,
+        return crudRepository.optional("""
+                        SELECT t FROM Task t
+                        LEFT JOIN FETCH t.priority
+                        LEFT JOIN FETCH t.user
+                        WHERE t.id = :id
+                        """, Task.class,
                 Map.of("id", id));
     }
 
