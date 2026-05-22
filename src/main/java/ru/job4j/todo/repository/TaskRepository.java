@@ -62,11 +62,13 @@ public class TaskRepository {
         int affectedRows = crudRepository.affectedRowsQuery(
                 """
                          UPDATE Task
-                         SET title = :title, description = :description
+                         SET title = :title, description = :description, priority = :priority
                          WHERE id = :id
                         """,
                 Map.of("title", task.getTitle(),
-                        "description", task.getDescription(), "id", task.getId())
+                        "description", task.getDescription(),
+                        "priority", task.getPriority(),
+                        "id", task.getId())
         );
         return affectedRows > 0;
     }
