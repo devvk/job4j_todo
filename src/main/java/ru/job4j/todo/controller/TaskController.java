@@ -6,9 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -18,6 +21,7 @@ public class TaskController {
 
     private final TaskService taskService;
     private final PriorityService priorityService;
+    private final CategoryService categoryService;
 
     @GetMapping
     public String getAllTasks(Model model) {
@@ -52,11 +56,15 @@ public class TaskController {
     public String getCreateForm(Model model) {
         model.addAttribute("task", new Task());
         model.addAttribute("priorities", priorityService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         return "tasks/create";
     }
 
     @PostMapping("/create")
-    public String createTask(@ModelAttribute Task task, @SessionAttribute User user) {
+    public String createTask(@ModelAttribute Task task,
+                             @RequestParam List<Integer> categoryIds,
+                             @SessionAttribute User user) {
+        task.setCategories(new HashSet<>(categoryService.findByIds(categoryIds)));
         Task savedTask = taskService.save(task, user);
         return "redirect:/tasks/" + savedTask.getId();
     }
@@ -70,12 +78,23 @@ public class TaskController {
         }
         model.addAttribute("task", taskOptional.get());
         model.addAttribute("priorities", priorityService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         return "tasks/edit";
     }
 
     @PostMapping("/edit/{id}")
-    public String editTask(@PathVariable int id, @ModelAttribute Task task, Model model) {
+    public String editTask(@PathVariable int id,
+                           @RequestParam(required = false) List<Integer> categoryIds,
+                           @ModelAttribute Task task, Model model) {
         task.setId(id);
+        if (categoryIds == null) {
+            model.addAttribute("error", "Выберите хотя бы одну категорию.");
+            model.addAttribute("task", task);
+            model.addAttribute("priorities", priorityService.findAll());
+            model.addAttribute("categories", categoryService.findAll());
+            return "tasks/edit";
+        }
+        task.setCategories(new HashSet<>(categoryService.findByIds(categoryIds)));
         boolean isUpdated = taskService.update(task);
         if (!isUpdated) {
             model.addAttribute("error", "Задача не найдена.");

@@ -20,6 +20,7 @@
             <th>Дата создания</th>
             <th>Состояние</th>
             <th>Приоритет</th>
+            <th>Категория</th>
             <th>Автор</th>
         </tr>
         </thead>
@@ -38,6 +39,13 @@
                       class="badge text-bg-info"
                       th:text="${task.priority.name}">Приоритет</span>
                 <span th:if="${task.priority == null}" class="badge text-bg-secondary">-</span>
+            </td>
+            <td>
+                <span th:each="category : ${task.categories}"
+                      class="badge text-bg-secondary me-1"
+                      th:text="${category.name}">
+                </span>
+                <span th:if="${task.categories == null || task.categories.isEmpty()}" class="text-muted">-</span>
             </td>
             <td th:text="${task.user != null ? task.user.login : '-'}"></td>
         </tr>

@@ -12,8 +12,6 @@
 
     <p class="text-muted" th:text="${#temporals.format(task.created, 'dd.MM.yyyy HH:mm')}"></p>
 
-    <p class="lead" th:text="${task.description}"></p>
-
     <p class="d-flex gap-2 align-items-center">
         <span th:if="${task.done}" class="badge text-bg-success">Выполнено</span>
         <span th:unless="${task.done}" class="badge text-bg-warning">Активное</span>
@@ -22,6 +20,16 @@
               th:text="${task.priority.name}">Приоритет</span>
     </p>
 
+    <p>
+        <strong>Категории:</strong>
+        <span th:each="category : ${task.categories}"
+              class="badge text-bg-secondary me-1"
+              th:text="${category.name}">
+                </span>
+        <span th:if="${task.categories == null || task.categories.isEmpty()}" class="text-muted">-</span>
+    </p>
+
+    <p class="lead" th:text="${task.description}"></p>
 
     <div class="d-flex gap-2">
 

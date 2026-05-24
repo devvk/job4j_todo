@@ -3,11 +3,8 @@ package ru.job4j.todo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 @Entity
-@Table(name = "users")
+@Table(name = "categories")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,19 +12,14 @@ import java.io.Serializable;
 @Builder
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class User implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Integer id;
 
-    String name;
+    @Column(nullable = false, unique = true)
+    private String name;
 
-    String login;
-
-    String password;
 }

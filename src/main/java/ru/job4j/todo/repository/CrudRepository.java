@@ -28,8 +28,12 @@ public class CrudRepository {
             transaction.commit();
             return result;
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
+            try {
+                if (transaction != null && transaction.isActive()) {
+                    transaction.rollback();
+                }
+            } catch (Exception rollbackException) {
+                e.addSuppressed(rollbackException);
             }
             throw e;
         }
