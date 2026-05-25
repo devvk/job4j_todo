@@ -29,5 +29,9 @@ public class User implements Serializable {
 
     String login;
 
+    @ToString.Exclude
     String password;
+
+    @Column(name = "zone_id")
+    private String zoneId;
 }

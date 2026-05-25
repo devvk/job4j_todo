@@ -29,7 +29,7 @@
             <td>
                 <a th:href="@{/tasks/{id}(id=${task.id})}" th:text="${task.title}"></a>
             </td>
-            <td th:text="${#temporals.format(task.created, 'dd.MM.yyyy HH:mm')}"></td>
+            <td th:text="${@timezoneService.format(task.created, session.user.zoneId)}"></td>
             <td>
                 <span th:if="${task.done}" class="badge text-bg-success">Выполнена</span>
                 <span th:unless="${task.done}" class="badge text-bg-warning">Новая</span>

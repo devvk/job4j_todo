@@ -10,7 +10,7 @@
 <div class="container mt-4">
     <h1 th:text="${task.title}">Название задачи</h1>
 
-    <p class="text-muted" th:text="${#temporals.format(task.created, 'dd.MM.yyyy HH:mm')}"></p>
+    <p class="text-muted" th:text="${@timezoneService.format(task.created, session.user.zoneId)}"></p>
 
     <p class="d-flex gap-2 align-items-center">
         <span th:if="${task.done}" class="badge text-bg-success">Выполнено</span>

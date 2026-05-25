@@ -41,6 +41,7 @@ public class Task {
     @ToString.Exclude
     private Priority priority;
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "tasks_categories",
             joinColumns = @JoinColumn(name = "task_id"),
